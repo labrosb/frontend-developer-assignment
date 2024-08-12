@@ -4,3 +4,12 @@ declare module "*.svg" {
   const src: string;
   export default src;
 }
+
+declare interface Recipient {
+  email: string;
+  isSelected: boolean;
+}
+
+declare interface RecipientGroups {
+  [key: string]: Recipient[];
+}
