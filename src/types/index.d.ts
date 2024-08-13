@@ -10,6 +10,4 @@ declare interface Recipient {
   isSelected: boolean;
 }
 
-declare interface RecipientGroups {
-  [key: string]: Recipient[];
-}
+declare type RecipientsGroup = [string, Recipient[]];
