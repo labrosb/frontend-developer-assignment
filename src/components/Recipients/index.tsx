@@ -7,13 +7,12 @@ import recipientsData from "../../assets/recipientsData.json";
 
 // The main recipients component, renders recipients viewer / selector
 export const Recipients: React.FC = () => {
-  const initialRecipients = useMemo(
-    () => groupRecipientsByDomain(recipientsData as Recipient[]),
-    [],
-  );
+  const initialRecipients = useMemo(() => {
+    return groupRecipientsByDomain(recipientsData);
+  }, []);
 
-  const [groupedRecipients, setGroupedRecipients] = useState<RecipientGroups>(
-    initialRecipients.groupedDomains,
+  const [recipientGroups, setRecipientGroups] = useState<RecipientsGroup[]>(
+    initialRecipients.domainGroups,
   );
   const [singleRecipients, setSingleRecipients] = useState<Recipient[]>(
     initialRecipients.singleDomains,
@@ -33,12 +32,12 @@ export const Recipients: React.FC = () => {
     <Container maxW="container.md" py="4">
       <SimpleGrid columns={{ base: 1, md: 2 }} spacing="10">
         <AvailableRecipients
-          companyRecipients={groupedRecipients}
+          companyRecipientGroups={recipientGroups}
           emailRecipients={singleRecipients}
           selectRecipients={handleSelectRecipients}
         />
         <SelectedRecipients
-          companyRecipients={groupedRecipients}
+          companyRecipientGroups={recipientGroups}
           emailRecipients={singleRecipients}
           removeRecipients={handleRemoveRecipients}
         />

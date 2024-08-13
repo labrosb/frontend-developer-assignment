@@ -43,10 +43,10 @@ export const ListItem: React.FC<ListItemProps> = ({ title, icon, onClick }) => {
 interface RecipientsListProps {
   title: string;
   titleButton: string;
-  recipients: RecipientGroups;
+  recipients: Recipient[];
   listItemIcon: typeof Icon;
   onTitleButtonClick: () => void;
-  onItemClick: (recipient: Recipient) => void;
+  onItemClick: (index: number) => void;
 }
 
 // Component renders a collapse recipients list with customizable actions and corresponding UI
@@ -97,12 +97,12 @@ export const RecipientsList: React.FC<RecipientsListProps> = ({
       </Flex>
       <Collapse in={isOpen}>
         <Box pb="4" pl="12">
-          {recipients[title].map((recipient) => (
+          {recipients.map((recipient, index) => (
             <ListItem
               key={`item-${title}-${recipient.email}`}
               title={recipient.email}
               icon={listItemIcon}
-              onClick={() => onItemClick(recipient)}
+              onClick={() => onItemClick(index)}
             />
           ))}
         </Box>

@@ -4,14 +4,14 @@ import { ArrowRightIcon } from "@chakra-ui/icons";
 import { RecipientsList, ListItem } from "./RecipientsList";
 
 interface AvailableRecipientsProps {
-  companyRecipients: RecipientGroups;
+  companyRecipientGroups: RecipientsGroup[]; // [company: string, recipient: object]
   emailRecipients: Recipient[];
   selectRecipients: (Recipients: Recipient[]) => void;
 }
 
 // Component renders the available recipients
 export const AvailableRecipients: React.FC<AvailableRecipientsProps> = ({
-  companyRecipients,
+  companyRecipientGroups,
   emailRecipients,
   selectRecipients,
 }) => {
@@ -21,17 +21,15 @@ export const AvailableRecipients: React.FC<AvailableRecipientsProps> = ({
         Available recipients
       </Heading>
       <Box borderWidth="1px" height="100%">
-        {Object.keys(companyRecipients).map((company) => (
+        {companyRecipientGroups.map(([company, recipients]) => (
           <RecipientsList
             key={`available-recipient-${company}`}
             title={company}
             titleButton="Select All"
-            recipients={companyRecipients}
+            recipients={recipients}
             listItemIcon={ArrowRightIcon}
-            onTitleButtonClick={() =>
-              selectRecipients(companyRecipients[company])
-            }
-            onItemClick={() => selectRecipients(companyRecipients[company])}
+            onTitleButtonClick={() => selectRecipients(recipients)}
+            onItemClick={() => selectRecipients(recipients)}
           />
         ))}
         <Box mt="2" mb="4" ml="9">

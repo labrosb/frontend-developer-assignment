@@ -50,17 +50,25 @@ const SelectedRecepientsGroup: React.FC<SelectedRecepientsGroupProps> = ({
 };
 
 interface SelectedRecipientsProps {
-  companyRecipients: RecipientGroups;
+  companyRecipientGroups: RecipientsGroup[]; // [company: string, recipient: object]
   emailRecipients: Recipient[];
   removeRecipients: (Recipients: Recipient[]) => void;
 }
 
 // Component renders the selected recipients grouped by company and individual emails
 export const SelectedRecipients: React.FC<SelectedRecipientsProps> = ({
-  companyRecipients,
+  companyRecipientGroups,
   emailRecipients,
   removeRecipients,
 }) => {
+  const selectedRecipientGroups = companyRecipientGroups.filter(
+    ([_, recipients]) => recipients.some((recipient) => recipient.isSelected),
+  );
+
+  const selectedEmailRecipients = emailRecipients.filter(
+    (recipient) => recipient.isSelected,
+  );
+
   return (
     <Box as="fieldset" borderWidth="1px" borderRadius="lg" p="4">
       <Heading as="legend" size="sm" px="3">
@@ -68,24 +76,22 @@ export const SelectedRecipients: React.FC<SelectedRecipientsProps> = ({
       </Heading>
       <Box borderWidth="1px" height="100%">
         <SelectedRecepientsGroup title="Company recipients" hasLists>
-          {Object.keys(companyRecipients).map((company) => (
+          {selectedRecipientGroups.map(([company, recipients]) => (
             <RecipientsList
               key={`selected-recipient-${company}`}
               title={company}
               titleButton="Remove all"
-              recipients={companyRecipients}
+              recipients={recipients.filter((recipient) => recipient.isSelected)}
               listItemIcon={DeleteIcon}
-              onTitleButtonClick={() =>
-                removeRecipients(companyRecipients[company])
-              }
-              onItemClick={() => removeRecipients(companyRecipients[company])}
+              onTitleButtonClick={() => removeRecipients(recipients)}
+              onItemClick={() => removeRecipients(recipients)}
             />
           ))}
         </SelectedRecepientsGroup>
         <SelectedRecepientsGroup title="Email recipients">
-          {emailRecipients.map((recipient) => (
+          {selectedEmailRecipients.map((recipient) => (
             <ListItem
-              key={`available-recipient-${recipient.email}`}
+              key={`selected-recipient-${recipient.email}`}
               title={recipient.email}
               icon={DeleteIcon}
               onClick={() => removeRecipients([recipient])}
