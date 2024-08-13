@@ -30,3 +30,15 @@ export const groupRecipientsByDomain = (recipients: Recipient[]) => {
 
   return { singleDomains, domainGroups };
 };
+
+// Function creates a map dictionary to map companies with indexes
+export const domainIndexMap = (groups: RecipientsGroup[]) => {
+  const domainMap = new Map<string, number>();
+
+  groups.forEach((group, index) => {
+    const [domain] = group;
+    domainMap.set(domain, index);
+  });
+
+  return domainMap;
+};

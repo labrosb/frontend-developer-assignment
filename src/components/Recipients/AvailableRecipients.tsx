@@ -6,14 +6,16 @@ import { RecipientsList, ListItem } from "./RecipientsList";
 interface AvailableRecipientsProps {
   companyRecipientGroups: RecipientsGroup[]; // [company: string, recipient: object]
   emailRecipients: Recipient[];
-  selectRecipients: (Recipients: Recipient[]) => void;
+  selectRecipient: (index: number, companyIndex?: number) => void;
+  selectAllRecipients: (companyIndex: number) => void;
 }
 
 // Component renders the available recipients
 export const AvailableRecipients: React.FC<AvailableRecipientsProps> = ({
   companyRecipientGroups,
   emailRecipients,
-  selectRecipients,
+  selectRecipient,
+  selectAllRecipients,
 }) => {
   return (
     <Box as="fieldset" borderWidth="1px" borderRadius="lg" p="4">
@@ -21,24 +23,24 @@ export const AvailableRecipients: React.FC<AvailableRecipientsProps> = ({
         Available recipients
       </Heading>
       <Box borderWidth="1px" height="100%">
-        {companyRecipientGroups.map(([company, recipients]) => (
+        {companyRecipientGroups.map(([company, recipients], index) => (
           <RecipientsList
             key={`available-recipient-${company}`}
             title={company}
             titleButton="Select All"
             recipients={recipients}
             listItemIcon={ArrowRightIcon}
-            onTitleButtonClick={() => selectRecipients(recipients)}
-            onItemClick={() => selectRecipients(recipients)}
+            onTitleButtonClick={() => selectAllRecipients(index)}
+            onItemClick={(listIndex) => selectRecipient(listIndex, index)}
           />
         ))}
         <Box mt="2" mb="4" ml="9">
-          {emailRecipients.map((recipient) => (
+          {emailRecipients.map((recipient, index) => (
             <ListItem
               key={`available-recipient-${recipient.email}`}
               title={recipient.email}
               icon={ArrowRightIcon}
-              onClick={() => selectRecipients([recipient])}
+              onClick={() => selectRecipient(index)}
             />
           ))}
         </Box>

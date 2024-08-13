@@ -46,7 +46,7 @@ interface RecipientsListProps {
   recipients: Recipient[];
   listItemIcon: typeof Icon;
   onTitleButtonClick: () => void;
-  onItemClick: (index: number) => void;
+  onItemClick: (index: number, recipient: Recipient) => void;
 }
 
 // Component renders a collapse recipients list with customizable actions and corresponding UI
@@ -102,7 +102,7 @@ export const RecipientsList: React.FC<RecipientsListProps> = ({
               key={`item-${title}-${recipient.email}`}
               title={recipient.email}
               icon={listItemIcon}
-              onClick={() => onItemClick(index)}
+              onClick={() => onItemClick(index, recipient)}
             />
           ))}
         </Box>
