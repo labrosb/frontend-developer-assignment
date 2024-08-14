@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import {
   Box,
   Heading,
@@ -25,14 +25,22 @@ export const AvailableRecipients: React.FC<AvailableRecipientsProps> = ({
   selectRecipient,
   selectAllRecipients,
 }) => {
-  const {
-    domainGroups,
-    singleRecipients,
-  } = separateRecipientsGroups(recipientGroups);
+  // Relying solely on suggestedGroups for rendering
+  // as it will revert to recipientGroups when not searching
+  const [suggestedGroups, setSuggestedGroups] = useState(recipientGroups);
 
-  const handleInputChange = () => {
-
+  const handleInputChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+    ev.stopPropagation();
+    const searchTerm = ev.target.value.toLowerCase();
+    const suggestions = recipientGroups.filter(([domain]) =>
+      domain.toLowerCase().includes(searchTerm),
+    );
+    setSuggestedGroups(suggestions);
   };
+
+  const { domainGroups, singleRecipients } = useMemo(() => {
+    return separateRecipientsGroups(suggestedGroups);
+  }, [suggestedGroups]);
 
   return (
     <Flex as="fieldset" direction="column" borderWidth="1px" borderRadius="lg" p="4">
