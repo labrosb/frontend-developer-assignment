@@ -1,3 +1,8 @@
+export const isValidEmail = (email: string) => {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email);
+};
+
 // Function groups recipients by domain
 export const groupRecipientsByDomain = (recipients: Recipient[]) => {
   const domainGroups: [string, Recipient[]][] = [];
@@ -46,7 +51,7 @@ export const separateSelectedRecipientsGroups = (domainGroups: RecipientsGroup[]
 
   domainGroups.forEach(([domain, recipients]) => {
     // Filter recipients to include only those that are selected
-    const selectedRecipients = recipients.filter(recipient => recipient.isSelected);
+    const selectedRecipients = recipients.filter((recipient) => recipient.isSelected);
 
     if (selectedRecipients.length > 1) {
       // If more than one selected recipient exists, add to filteredGroups
@@ -62,7 +67,6 @@ export const separateSelectedRecipientsGroups = (domainGroups: RecipientsGroup[]
     selectedSingleRecipients: singleRecipients,
   };
 };
-
 
 // Function creates a map dictionary to map companies with indexes
 export const domainIndexMap = (domainGroups: RecipientsGroup[]) => {
