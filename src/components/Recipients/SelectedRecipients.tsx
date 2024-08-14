@@ -30,11 +30,11 @@ export const SelectedRecipients: React.FC<SelectedRecipientsProps> = ({
   const hasGroups = selectedRecipientGroups.length > 0;
 
   return (
-    <Box as="fieldset" borderWidth="1px" borderRadius="lg" p="4">
+    <Flex as="fieldset" direction="column" borderWidth="1px" borderRadius="lg" p="4">
       <Heading as="legend" size="sm" px="3">
         Selected recipients
       </Heading>
-      <Box borderWidth="1px" height="100%">
+      <Box flex="1" borderWidth="1px" mt={{ base: "1", md: "14" }}>
         <SelectedRecepientsGroup title="Company recipients" hasLists={hasGroups}>
           {selectedRecipientGroups.map(([company, recipients]) => (
             <RecipientsList
@@ -49,7 +49,7 @@ export const SelectedRecipients: React.FC<SelectedRecipientsProps> = ({
               }}
             />
           ))}
-          {!hasGroups && <Text>No companies selected</Text>}
+          {!hasGroups && <Text>No company recipients</Text>}
         </SelectedRecepientsGroup>
         <SelectedRecepientsGroup title="Email recipients">
           {selectedEmailRecipients.map((recipient) => (
@@ -63,7 +63,7 @@ export const SelectedRecipients: React.FC<SelectedRecipientsProps> = ({
           {selectedEmailRecipients.length === 0 && <Text>No emails selected</Text>}
         </SelectedRecepientsGroup>
       </Box>
-    </Box>
+    </Flex>
   );
 };
 
@@ -87,19 +87,17 @@ const SelectedRecepientsGroup: React.FC<SelectedRecepientsGroupProps> = ({
 
   return (
     <>
-      <Flex
-        justifyContent="space-between"
-        width="100%"
+      <Box
         p="2"
         cursor="pointer"
         _hover={{ backgroundColor: "teal.100" }}
         onClick={toggleCollapse}
       >
-        <Box display="flex" alignItems="center" gap="2">
+        <Flex alignItems="center" gap="2">
           <Box as={isOpen ? ChevronDownIcon : ChevronRightIcon} boxSize="5" />
           <Box>{title}</Box>
-        </Box>
-      </Flex>
+        </Flex>
+      </Box>
       <Collapse in={isOpen}>
         <Box pb="4" pl={hasLists ? 5 : 12}>
           {children}

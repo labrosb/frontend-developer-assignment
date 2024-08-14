@@ -1,6 +1,13 @@
 import React from "react";
-import { Box, Heading } from "@chakra-ui/react";
-import { ArrowRightIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Heading,
+  Input,
+  Flex,
+  InputGroup,
+  InputLeftElement,
+} from "@chakra-ui/react";
+import { ArrowRightIcon, SearchIcon } from "@chakra-ui/icons";
 import { RecipientsList } from "./RecipientsList";
 import { ListItem } from "./ListItem";
 
@@ -19,12 +26,26 @@ export const AvailableRecipients: React.FC<AvailableRecipientsProps> = ({
   selectRecipient,
   selectAllRecipients,
 }) => {
+  const handleInputChange = () => {
+
+  };
+
   return (
-    <Box as="fieldset" borderWidth="1px" borderRadius="lg" p="4">
+    <Flex as="fieldset" direction="column" borderWidth="1px" borderRadius="lg" p="4">
       <Heading as="legend" size="sm" px="3">
         Available recipients
       </Heading>
-      <Box borderWidth="1px" height="100%">
+      <InputGroup mb="4">
+        <InputLeftElement pointerEvents="none">
+          <SearchIcon color="gray.300" />
+        </InputLeftElement>
+        <Input
+          placeholder="Search"
+          _focus={{ boxShadow: "none", borderColor: "gray.200" }}
+          onChange={handleInputChange}
+        />
+      </InputGroup>
+      <Box flex="1" borderWidth="1px">
         {companyRecipientGroups.map(([company, recipients], index) => (
           <RecipientsList
             key={`available-recipient-${company}`}
@@ -47,6 +68,6 @@ export const AvailableRecipients: React.FC<AvailableRecipientsProps> = ({
           ))}
         </Box>
       </Box>
-    </Box>
+    </Flex>
   );
 };

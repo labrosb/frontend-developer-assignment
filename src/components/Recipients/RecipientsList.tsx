@@ -36,17 +36,16 @@ export const RecipientsList: React.FC<RecipientsListProps> = ({
     <Box>
       <Flex
         justifyContent="space-between"
-        width="100%"
         p="2"
         cursor="pointer"
         _hover={{ backgroundColor: "teal.100" }}
         sx={{ "&:hover": { "& .title-button": { opacity: 1 } } }}
         onClick={toggleCollapse}
       >
-        <Box display="flex" alignItems="center" gap="2">
+        <Flex alignItems="center" gap="2">
           <Box as={isOpen ? ChevronDownIcon : ChevronRightIcon} boxSize="5" />
           <Box>{title}</Box>
-        </Box>
+        </Flex>
         <Button
           className="title-button"
           size="xs"
