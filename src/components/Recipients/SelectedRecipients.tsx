@@ -1,52 +1,12 @@
 import React, { useState } from "react";
 import { Box, Collapse, Flex, Heading, Text } from "@chakra-ui/react";
 import { ChevronRightIcon, ChevronDownIcon, DeleteIcon } from "@chakra-ui/icons";
-import { RecipientsList, ListItem } from "./RecipientsList";
-
-interface SelectedRecepientsGroupProps {
-  title: string;
-  hasLists?: boolean;
-  children: React.ReactNode;
-}
-
-// Component wraps one or multiple lists, to render a Collapse component with title
-const SelectedRecepientsGroup: React.FC<SelectedRecepientsGroupProps> = ({
-  title,
-  hasLists = false,
-  children,
-}) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleCollapse = () => {
-    setIsOpen(!isOpen);
-  };
-
-  return (
-    <>
-      <Flex
-        justifyContent="space-between"
-        width="100%"
-        p="2"
-        cursor="pointer"
-        _hover={{ backgroundColor: "teal.100" }}
-        onClick={toggleCollapse}
-      >
-        <Box display="flex" alignItems="center" gap="2">
-          <Box as={isOpen ? ChevronDownIcon : ChevronRightIcon} boxSize="5" />
-          <Box>{title}</Box>
-        </Box>
-      </Flex>
-      <Collapse in={isOpen}>
-        <Box pb="4" pl={hasLists ? 5 : 12}>
-          {children}
-        </Box>
-      </Collapse>
-    </>
-  );
-};
+import { RecipientsList } from "./RecipientsList";
+import { ListItem } from "./ListItem";
 
 interface SelectedRecipientsProps {
-  companyRecipientGroups: RecipientsGroup[]; // [company: string, recipient: object]
+  // [company: string, recipient: object]
+  companyRecipientGroups: RecipientsGroup[];
   emailRecipients: Recipient[];
   unselectRecipient: (email: string, company?: string) => void;
   unselectAllRecipients: (company: string) => void;
@@ -104,5 +64,47 @@ export const SelectedRecipients: React.FC<SelectedRecipientsProps> = ({
         </SelectedRecepientsGroup>
       </Box>
     </Box>
+  );
+};
+
+interface SelectedRecepientsGroupProps {
+  title: string;
+  hasLists?: boolean;
+  children: React.ReactNode;
+}
+
+// Component wraps one or multiple lists, to render a Collapse component with title
+const SelectedRecepientsGroup: React.FC<SelectedRecepientsGroupProps> = ({
+  title,
+  hasLists = false,
+  children,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleCollapse = () => {
+    setIsOpen(!isOpen);
+  };
+
+  return (
+    <>
+      <Flex
+        justifyContent="space-between"
+        width="100%"
+        p="2"
+        cursor="pointer"
+        _hover={{ backgroundColor: "teal.100" }}
+        onClick={toggleCollapse}
+      >
+        <Box display="flex" alignItems="center" gap="2">
+          <Box as={isOpen ? ChevronDownIcon : ChevronRightIcon} boxSize="5" />
+          <Box>{title}</Box>
+        </Box>
+      </Flex>
+      <Collapse in={isOpen}>
+        <Box pb="4" pl={hasLists ? 5 : 12}>
+          {children}
+        </Box>
+      </Collapse>
+    </>
   );
 };

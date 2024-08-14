@@ -1,10 +1,12 @@
 import React from "react";
 import { Box, Heading } from "@chakra-ui/react";
 import { ArrowRightIcon } from "@chakra-ui/icons";
-import { RecipientsList, ListItem } from "./RecipientsList";
+import { RecipientsList } from "./RecipientsList";
+import { ListItem } from "./ListItem";
 
 interface AvailableRecipientsProps {
-  companyRecipientGroups: RecipientsGroup[]; // [company: string, recipient: object]
+  // [company: string, recipient: object]
+  companyRecipientGroups: RecipientsGroup[];
   emailRecipients: Recipient[];
   selectRecipient: (index: number, companyIndex?: number) => void;
   selectAllRecipients: (companyIndex: number) => void;

@@ -22,7 +22,6 @@ export const Recipients: React.FC = () => {
     domainIndexMap(initialRecipients.domainGroups),
   );
 
-  // Sets recipient as selected in the state where belongs
   const handleSelectRecipient = (index: number, groupIndex?: number) => {
     if (groupIndex !== undefined) {
       setRecipientGroups((prevGroups) => {
@@ -77,7 +76,7 @@ export const Recipients: React.FC = () => {
     }
   };
 
-  const toggleAllRecipients = (value: boolean, groupIndex: number) => {
+  const toggleSelectAllRecipients = (value: boolean, groupIndex: number) => {
     setRecipientGroups((prevGroups) => {
       // Copy the current state to avoid mutating it
       const newGroups = [...prevGroups];
@@ -94,12 +93,12 @@ export const Recipients: React.FC = () => {
   };
 
   const handleSelectAllRecipients = (groupIndex: number) => {
-    return toggleAllRecipients(true, groupIndex);
+    return toggleSelectAllRecipients(true, groupIndex);
   };
 
   const handleUnselectAllRecipients = (group: string) => {
     const groupIndex = domainGroupsIndexMap.get(group);
-    return toggleAllRecipients(false, groupIndex);
+    return toggleSelectAllRecipients(false, groupIndex);
   };
 
   return (
