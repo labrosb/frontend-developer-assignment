@@ -3,31 +3,27 @@ import { Box, Collapse, Flex, Heading, Text } from "@chakra-ui/react";
 import { ChevronRightIcon, ChevronDownIcon, DeleteIcon } from "@chakra-ui/icons";
 import { RecipientsList } from "./RecipientsList";
 import { ListItem } from "./ListItem";
+import { separateSelectedRecipientsGroups } from "./helpers";
 
 interface SelectedRecipientsProps {
-  // [company: string, recipient: object]
-  companyRecipientGroups: RecipientsGroup[];
-  emailRecipients: Recipient[];
-  unselectRecipient: (email: string, company?: string) => void;
-  unselectAllRecipients: (company: string) => void;
+  // [domain: string, recipient: object]
+  recipientGroups: RecipientsGroup[];
+  unselectRecipient: (email: string, domain?: string) => void;
+  unselectAllRecipients: (domain: string) => void;
 }
 
 // Component renders the selected recipients grouped by company and individual emails
 export const SelectedRecipients: React.FC<SelectedRecipientsProps> = ({
-  companyRecipientGroups,
-  emailRecipients,
+  recipientGroups,
   unselectRecipient,
   unselectAllRecipients,
 }) => {
-  const selectedRecipientGroups = companyRecipientGroups.filter(([_, recipients]) =>
-    recipients.some((recipient) => recipient.isSelected),
-  );
+  const {
+    selectedGroupDomains,
+    selectedSingleRecipients,
+  } = separateSelectedRecipientsGroups(recipientGroups);
 
-  const selectedEmailRecipients = emailRecipients.filter(
-    (recipient) => recipient.isSelected,
-  );
-
-  const hasGroups = selectedRecipientGroups.length > 0;
+  const hasGroups = selectedGroupDomains.length > 0;
 
   return (
     <Flex as="fieldset" direction="column" borderWidth="1px" borderRadius="lg" p="4">
@@ -36,23 +32,23 @@ export const SelectedRecipients: React.FC<SelectedRecipientsProps> = ({
       </Heading>
       <Box flex="1" borderWidth="1px" mt={{ base: "1", md: "14" }}>
         <SelectedRecepientsGroup title="Company recipients" hasLists={hasGroups}>
-          {selectedRecipientGroups.map(([company, recipients]) => (
+          {selectedGroupDomains.map(([domain, recipients]) => (
             <RecipientsList
-              key={`selected-recipient-${company}`}
-              title={company}
+              key={`selected-recipient-${domain}`}
+              title={domain}
               titleButton="Remove all"
-              recipients={recipients.filter((recipient) => recipient.isSelected)}
+              recipients={recipients}
               listItemIcon={DeleteIcon}
-              onTitleButtonClick={() => unselectAllRecipients(company)}
-              onItemClick={(_, recipient) => {
-                unselectRecipient(recipient.email, company);
+              onTitleButtonClick={() => unselectAllRecipients(domain)}
+              onItemClick={(recipient) => {
+                unselectRecipient(recipient.email, domain);
               }}
             />
           ))}
           {!hasGroups && <Text>No company recipients</Text>}
         </SelectedRecepientsGroup>
         <SelectedRecepientsGroup title="Email recipients">
-          {selectedEmailRecipients.map((recipient) => (
+          {selectedSingleRecipients.map((recipient) => (
             <ListItem
               key={`selected-recipient-${recipient.email}`}
               title={recipient.email}
@@ -60,7 +56,7 @@ export const SelectedRecipients: React.FC<SelectedRecipientsProps> = ({
               onClick={() => unselectRecipient(recipient.email)}
             />
           ))}
-          {selectedEmailRecipients.length === 0 && <Text>No emails selected</Text>}
+          {selectedSingleRecipients.length === 0 && <Text>No emails selected</Text>}
         </SelectedRecepientsGroup>
       </Box>
     </Flex>

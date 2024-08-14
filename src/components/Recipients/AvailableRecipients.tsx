@@ -10,22 +10,26 @@ import {
 import { ArrowRightIcon, SearchIcon } from "@chakra-ui/icons";
 import { RecipientsList } from "./RecipientsList";
 import { ListItem } from "./ListItem";
+import { separateRecipientsGroups } from "./helpers";
 
 interface AvailableRecipientsProps {
-  // [company: string, recipient: object]
-  companyRecipientGroups: RecipientsGroup[];
-  emailRecipients: Recipient[];
-  selectRecipient: (index: number, companyIndex?: number) => void;
-  selectAllRecipients: (companyIndex: number) => void;
+  // [domain: string, recipient: object]
+  recipientGroups: RecipientsGroup[];
+  selectRecipient: (email: string, domain?: string) => void;
+  selectAllRecipients: (domain: string) => void;
 }
 
 // Component renders the available recipients
 export const AvailableRecipients: React.FC<AvailableRecipientsProps> = ({
-  companyRecipientGroups,
-  emailRecipients,
+  recipientGroups,
   selectRecipient,
   selectAllRecipients,
 }) => {
+  const {
+    domainGroups,
+    singleRecipients,
+  } = separateRecipientsGroups(recipientGroups);
+
   const handleInputChange = () => {
 
   };
@@ -46,24 +50,24 @@ export const AvailableRecipients: React.FC<AvailableRecipientsProps> = ({
         />
       </InputGroup>
       <Box flex="1" borderWidth="1px">
-        {companyRecipientGroups.map(([company, recipients], index) => (
+        {domainGroups.map(([domain, recipients], index) => (
           <RecipientsList
-            key={`available-recipient-${company}`}
-            title={company}
+            key={`available-recipient-${domain}`}
+            title={domain}
             titleButton="Select All"
             recipients={recipients}
             listItemIcon={ArrowRightIcon}
-            onTitleButtonClick={() => selectAllRecipients(index)}
-            onItemClick={(listIndex) => selectRecipient(listIndex, index)}
+            onTitleButtonClick={() => selectAllRecipients(domain)}
+            onItemClick={(recipient) => selectRecipient(recipient.email, domain)}
           />
         ))}
         <Box mt="2" mb="4" ml="9">
-          {emailRecipients.map((recipient, index) => (
+          {singleRecipients.map((recipient) => (
             <ListItem
               key={`available-recipient-${recipient.email}`}
               title={recipient.email}
               icon={ArrowRightIcon}
-              onClick={() => selectRecipient(index)}
+              onClick={() => selectRecipient(recipient.email)}
             />
           ))}
         </Box>

@@ -1,41 +1,74 @@
-// Function groups recipients by domain (company) if more than one in an array of arrays dataset
-// and groups seperately the recipients that their email's domain is single in a single array
+// Function groups recipients by domain
 export const groupRecipientsByDomain = (recipients: Recipient[]) => {
-  const singleDomains: Recipient[] = [];
   const domainGroups: [string, Recipient[]][] = [];
-
   const domainMap = new Map<string, Recipient[]>();
 
   recipients.forEach((recipient) => {
-    const domain = recipient.email.split("@")[1].split(".")[0];
+    const domain = recipient.email.split("@")[1];
+    // Get the array of recipients for this domain, or create it if it doesn't exist
+    let domainRecipients = domainMap.get(domain);
 
-    let recipients = domainMap.get(domain);
-
-    if (!recipients) {
-      recipients = [];
-      domainMap.set(domain, recipients);
+    if (!domainRecipients) {
+      domainRecipients = [];
+      domainMap.set(domain, domainRecipients);
     }
-
-    recipients.push(recipient);
-
-    if (recipients.length === 1) {
-      singleDomains.push(recipient);
-    } else if (recipients.length === 2) {
-      // Add the recipient to domainGroups and remove the first from singleDomains
-      domainGroups.push([domain, recipients]);
-      // Remove the last recipient added to singleDomains
-      singleDomains.splice(singleDomains.length - 1, 1);
+    // Add the current recipient to the domain's array
+    domainRecipients.push(recipient);
+    // If this is the first recipient for this domain, add it to domainGroups
+    if (domainRecipients.length === 1) {
+      domainGroups.push([domain, domainRecipients]);
     }
   });
 
-  return { singleDomains, domainGroups };
+  return domainGroups;
 };
 
+// Seperates recipients that are the only ones in a domain
+export const separateRecipientsGroups = (domainGroups: RecipientsGroup[]) => {
+  const filteredGroups: RecipientsGroup[] = [];
+  const singleRecipients: Recipient[] = [];
+
+  domainGroups.forEach(([domain, recipients]) => {
+    if (recipients.length > 1) {
+      filteredGroups.push([domain, recipients]);
+    } else {
+      singleRecipients.push(...recipients);
+    }
+  });
+
+  return { domainGroups: filteredGroups, singleRecipients };
+};
+
+// Seperates the selected recipients that are the only ones in a domain
+export const separateSelectedRecipientsGroups = (domainGroups: RecipientsGroup[]) => {
+  const filteredGroups: RecipientsGroup[] = [];
+  const singleRecipients: Recipient[] = [];
+
+  domainGroups.forEach(([domain, recipients]) => {
+    // Filter recipients to include only those that are selected
+    const selectedRecipients = recipients.filter(recipient => recipient.isSelected);
+
+    if (selectedRecipients.length > 1) {
+      // If more than one selected recipient exists, add to filteredGroups
+      filteredGroups.push([domain, selectedRecipients]);
+    } else if (selectedRecipients.length === 1) {
+      // If exactly one selected recipient exists, add to singleRecipients
+      singleRecipients.push(selectedRecipients[0]);
+    }
+  });
+
+  return {
+    selectedGroupDomains: filteredGroups,
+    selectedSingleRecipients: singleRecipients,
+  };
+};
+
+
 // Function creates a map dictionary to map companies with indexes
-export const domainIndexMap = (groups: RecipientsGroup[]) => {
+export const domainIndexMap = (domainGroups: RecipientsGroup[]) => {
   const domainMap = new Map<string, number>();
 
-  groups.forEach((group, index) => {
+  domainGroups.forEach((group, index) => {
     const [domain] = group;
     domainMap.set(domain, index);
   });
